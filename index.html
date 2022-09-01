@@ -12,7 +12,7 @@
                 (2)按空格暂停游戏<br/>
                 (3)按ctrl加速<br/>
     </span>
-    <button id="btn" onclick="start()" style="width: 120px;height: 40px;background: cornflowerblue;margin: 10px;color: #fff">开始游戏</button>
+    <button id="btn" onclick="start()" style="width: 120px;height: 40px;background: cornflowerblue;margin: 10px;color: #fff;border: none">开始游戏</button>
     <div style="display: flex">
         <h3 id ='score'>得分：0</h3>
     </div>
@@ -45,13 +45,18 @@
 
    //snake
    const drawSnake = () =>{
-     for(let i=0 ;i<snake.length ;i++)
+     for(let i=0 ;i<snake.length-1 ;i++)
      {
        let x=snake[i][0]*size
        let y=snake[i][1]*size
        ctx.fillStyle = "rgb(0,200,0)";
        ctx.fillRect (x,y , 10, 10);//填充颜色
      }
+
+       let x=snake[snake.length-1][0]*size
+       let y=snake[snake.length-1][1]*size
+       ctx.fillStyle = "skyblue";
+       ctx.fillRect (x,y , 10, 10);//填充颜色
    }
    const clearSnake = () =>{
      for(let i=0 ;i<snake.length ;i++)
@@ -79,7 +84,7 @@
      score++
    }
    const updateScore = () =>{
-     document.getElementById('score').innerHTML=score
+     document.getElementById('score').innerHTML='得分：' + score
    }
 
 
