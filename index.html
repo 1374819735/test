@@ -93,9 +93,13 @@
      }
      drawSnake(snake)
      timer =  setTimeout(() =>{game()},interval)
-     if(newX==-1||newX===40||newY==-1||newY===40){
-       alert('game over')
+     if(isDead(newX,newY)){
+       score=0
+       clearSnake()
+       updateScore()
+       clearTimeout(timer)
        ctx.clearRect(0,0,400,400)
+       alert('game over')
      }
    }
    const iseat = (x,y) =>{
@@ -137,7 +141,7 @@
          currentDir=1//当前方向
           break;
         case 37 :  // 按下左箭头键
-          if(this.currentDir==3){
+          if(currentDir==3){
             break;
           }
          addX=direction[2][0] //横坐标增量
@@ -174,6 +178,21 @@
      };
     game()
   }
+   //判断小蛇是否死亡
+   const isDead = (x,y) =>{
+     // //是否碰到墙壁
+     if(x==-1||x==40||y==-1||y==40){
+       return true;
+     }
+     //是否碰到身体
+     for (let i = 0; i < snake.length-1; i++) {
+       if(x===snake[i][0]&&y===snake[i][1]){
+         return true;
+       }
+     }
+     return false;
+   }
+
    const start =() => {
      ctx.clearRect(0,0,400,400)
      init()
