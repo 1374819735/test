@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>贪吃蛇demo</title>
 </head>
 <body>
 <div>
@@ -42,20 +42,29 @@
    //score
    let score =0
 
+    const colorList = []
 
+   //背景颜色随机
+   const  divColor = () => {
+     let col="#";//这个字符串第一位为# 颜色的格式
+     for(let i=0;i<6;i++){
+       col+=parseInt(Math.random()*16).toString(16);
+     }
+     return col;//最后返回一个七位的值 格式即为#nnnnnn 颜色的格式
+   }
    //snake
    const drawSnake = () =>{
      for(let i=0 ;i<snake.length-1 ;i++)
      {
        let x=snake[i][0]*size
        let y=snake[i][1]*size
-       ctx.fillStyle = "rgb(0,200,0)";
+       ctx.fillStyle = 'rgb(0,200,0)';
        ctx.fillRect (x,y , 10, 10);//填充颜色
      }
 
        let x=snake[snake.length-1][0]*size
        let y=snake[snake.length-1][1]*size
-       ctx.fillStyle = "skyblue";
+       ctx.fillStyle = "red";
        ctx.fillRect (x,y , 10, 10);//填充颜色
    }
    const clearSnake = () =>{
@@ -207,6 +216,8 @@
 
    const start =() => {
      ctx.clearRect(0,0,400,400)
+     document.getElementById('btn').innerHTML='重新开始'
+     clearTimeout(timer)
      init()
    }
 
