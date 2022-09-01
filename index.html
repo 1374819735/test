@@ -12,7 +12,9 @@
                 (2)按空格暂停游戏<br/>
                 (3)按ctrl加速<br/>
     </span>
-    <button id="btn" onclick="start()" style="width: 120px;height: 40px;background: cornflowerblue;margin: 10px;color: #fff;border: none">开始游戏</button>
+    <div id="btn" onclick="start()"
+            aria-selected="false"
+            style="width: 120px;height: 40px;background: cornflowerblue;margin: 10px;color: #fff;border: none;line-height: 40px;text-align: center;cursor: pointer">开始游戏</div>
     <div style="display: flex">
         <h3 id ='score'>得分：0</h3>
     </div>
@@ -138,6 +140,7 @@
     addY=direction[3][1] //纵坐标增量
     currentDir = 3
     timer=null
+     pause=false
     score=0
     updateScore()
     generateFood()
@@ -220,6 +223,7 @@
      clearTimeout(timer)
      init()
    }
+   // init()
 
 </script>
 </body>
