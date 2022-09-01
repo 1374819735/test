@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div>
+    <button id="btn" onclick="start()">开始游戏</button>
+    <div style="display: flex">
+        <h3 id ='score'>得分：0</h3>
+    </div>
+</div>
+<div style="width:400px; border: 1px solid #666; height: 400px">
+    <canvas  width='400px' height='400px' id='canvas'>
+        您的浏览器不支持canvas 标签
+    </canvas>
+</div>
+</div>
+<script>
+   const canvas = document.getElementById('canvas')
+   let ctx = canvas.getContext("2d");
+   const size = 10
+   // snake
+   let snake = [[0,1],[1,1]]
+   //game
+   let direction = [[0,-1],[0,1],[-1,0],[1,0]];//对应上下左右
+   let addX=direction[3][0] //横坐标增量
+   let addY=direction[3][1] //纵坐标增量
+   let timer
+   let currentDir = 3 //当前方向
+   let pause = false //暂停
+   let interval=200//重绘小蛇的时间间隔
+   //food
+   let FX,FY
+   //score
+   let score =0
+
+
+   //snake
+   const drawSnake = () =>{
+     for(let i=0 ;i<snake.length ;i++)
+     {
+       let x=snake[i][0]*size
+       let y=snake[i][1]*size
+       ctx.fillStyle = "rgb(0,200,0)";
+       ctx.fillRect (x,y , 10, 10);//填充颜色
+     }
+   }
+   const clearSnake = () =>{
+     for(let i=0 ;i<snake.length ;i++)
+     {
+       let x=snake[i][0]*size
+       let y=snake[i][1]*size
+       ctx.clearRect (x,y , 10, 10);//填充颜色
+     }
+   }
+
+   //food
+   const generateFood = () => {
+     FX=Math.round(Math.random()*39);
+     FY=Math.round(Math.random()*39);
+     //绘制食物
+     let image = new Image();
+     image.onload =  () => {
+       ctx.drawImage(image,FX*10, FY*10, 10 ,10);
+     }
+     image.src = 'https://bhb-frontend.bhbcdn.com/static/files/45137a24b321bafd5d7a42b32fce6521.jpg';
+   }
+
+   //score
+   const AddScore = () =>{
+     score++
+   }
+   const updateScore = () =>{
+     document.getElementById('score').innerHTML=score
+   }
+
+
+   //game
+   const game= () =>{
+     clearSnake()
+     const newX= snake[snake.length-1][0] +addX
+     const newY= snake[snake.length-1][1] +addY
+     snake.push([newX,newY])
+     if(iseat(newX,newY)){
+       generateFood()
+       AddScore()
+       updateScore()
+     }
+     else{
+       snake.shift()
+     }
+     drawSnake(snake)
+     timer =  setTimeout(() =>{game()},interval)
+     if(newX==-1||newX===40||newY==-1||newY===40){
+       alert('game over')
+       ctx.clearRect(0,0,400,400)
+     }
+   }
+   const iseat = (x,y) =>{
+     if(FX===x&&FY===y)
+     {
+       return true
+     }
+     else{
+       return  false
+     }
+  }
+   const init= () => {
+    snake = [[0,1],[1,1]]
+    addX=direction[3][0] //横坐标增量
+    addY=direction[3][1] //纵坐标增量
+    currentDir = 3
+    timer=null
+    score=0
+    updateScore()
+    generateFood()
+    //控制小蛇方向，游戏刚开始时，小蛇的默认方向向右
+    // @ts-ignore
+    document.onkeydown=(event)=>{
+      switch(event.keyCode){  // 获取当前按下键盘键的编码   38  40   37  39
+        case 38 :  // 按下上箭头键
+          if(currentDir==1){//如果当前方向是"下"，不允许向下改变方向，直接跳出
+            break;
+          }
+          addX=direction[0][0] //横坐标增量
+          addY=direction[0][1] //纵坐标增量
+          currentDir=0//当前方向
+          break;
+        case 40 :  // 按下下箭头键
+          if(currentDir==0){
+            break;
+          }
+         addX=direction[1][0] //横坐标增量
+         addY=direction[1][1] //纵坐标增量
+         currentDir=1//当前方向
+          break;
+        case 37 :  // 按下左箭头键
+          if(this.currentDir==3){
+            break;
+          }
+         addX=direction[2][0] //横坐标增量
+         addY=direction[2][1] //纵坐标增量
+          currentDir=2//当前方向
+          break;
+        case 39 :  // 按下右箭头键
+          if(currentDir==2){
+            break;
+          }
+          addX=direction[3][0] //横坐标增量
+          addY=direction[3][1] //纵坐标增量
+          currentDir=3//当前方向
+          break;
+        case 17 : //按下ctrl键（加速）
+         interval=50;
+          break;
+        case 32:  //按下空格（暂停）
+          console.log(pause);
+          if(!pause){
+            clearTimeout(timer)
+            pause=!pause
+          }else{
+            pause=!pause
+            game()
+          }
+      }
+    }
+     document.onkeyup = (event)=> {
+       //当抬起ctrl时，恢复速度
+       if(event.keyCode==17){
+         interval=200;
+       }
+     };
+    game()
+  }
+   const start =() => {
+     ctx.clearRect(0,0,400,400)
+     init()
+   }
+
+</script>
+</body>
+</html>
